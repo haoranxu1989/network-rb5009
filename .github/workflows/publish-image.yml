@@ -1,0 +1,54 @@
+name: Publish release image
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version without v, for example 2026.11.23'
+        required: true
+        default: '2026.11.23'
+
+permissions:
+  contents: read
+  packages: write
+
+concurrency:
+  group: publish-release-image
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      VERSION: ${{ inputs.version }}
+      REPOSITORY: ${{ github.repository }}
+    steps:
+      - name: Download and verify the published offline image
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ "$VERSION" =~ ^[0-9]{4}\.[0-9]{2}\.[0-9]{2}$ ]]
+          mkdir -p "$RUNNER_TEMP/network-release"
+          cd "$RUNNER_TEMP/network-release"
+          gh release download "v$VERSION" --repo "$REPOSITORY" \
+            --pattern "network-rb5009-$VERSION-linux-amd64.tar" --pattern SHA256SUMS
+          sha256sum -c SHA256SUMS
+          docker load -i "network-rb5009-$VERSION-linux-amd64.tar"
+          image="ghcr.io/${REPOSITORY,,}:$VERSION"
+          test "$(docker image inspect "$image" --format '{{.Os}}/{{.Architecture}}')" = linux/amd64
+          test "$(docker image inspect "$image" --format '{{index .Config.Labels "org.opencontainers.image.source"}}')" = "https://github.com/$REPOSITORY"
+
+      - name: Publish the same image to GitHub Container Registry
+        shell: bash
+        run: |
+          set -euo pipefail
+          image="ghcr.io/${REPOSITORY,,}"
+          printf '%s' "$GH_TOKEN" | docker login ghcr.io -u "$GITHUB_ACTOR" --password-stdin
+          docker push "$image:$VERSION"
+          docker tag "$image:$VERSION" "$image:latest"
+          docker push "$image:latest"
+
+      - name: Remove runner login
+        if: always()
+        run: docker logout ghcr.io
