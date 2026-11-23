@@ -1,0 +1,27 @@
+version: "3"
+services:
+  network:
+    image: ghcr.io/haoranxu1989/network-rb5009:2026.11.23
+    container_name: network
+    restart: unless-stopped
+    environment:
+      NETWORK_HTTP_PORT: "80"
+      ROUTEROS_HOST: "10.0.10.1"  # 示例：替换为网关 IP / Replace with your gateway IP
+      ROUTEROS_TRANSPORT: "api"
+      ROUTEROS_PORT: "8728"
+      ROUTEROS_USER: "admin"
+      ROUTEROS_PASSWORD: "password"  # 占位符，必须替换 / Placeholder: replace this
+      # 建议设置独立面板密码，用户名 network / Recommended: separate dashboard password.
+      # NETWORK_ADMIN_PASSWORD: ''
+    sysctls:
+      net.ipv4.ip_unprivileged_port_start: "0"
+    volumes:
+      - /share/Container/network/data:/data
+    networks:
+      default:
+        ipv4_address: 10.0.10.251  # 预留空闲 LAN IP / Reserve an unused LAN IP
+
+networks:
+  default:
+    external: true
+    name: qnet-static-eth0-20cf19  # 示例：替换为已有的 QNAP 网络名 / Your existing QNAP network
