@@ -1,0 +1,10 @@
+web/node_modules/
+__pycache__/
+*.pyc
+/data/
+/.env
+/.env.*
+!/.env.example
+*.sqlite3*
+/qnap/*.tar
+.DS_Store

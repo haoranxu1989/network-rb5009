@@ -1,0 +1,25 @@
+services:
+  network:
+    image: ghcr.io/haoranxu1989/network-rb5009:2026.11.23
+    container_name: network
+    restart: unless-stopped
+    ports:
+      - "${NETWORK_WEB_PORT:-8080}:8080"
+    environment:
+      ROUTEROS_HOST: ${ROUTEROS_HOST:?Set ROUTEROS_HOST in .env}
+      ROUTEROS_TRANSPORT: ${ROUTEROS_TRANSPORT:-api-ssl}
+      ROUTEROS_PORT: ${ROUTEROS_PORT:-}
+      ROUTEROS_USER: ${ROUTEROS_USER:?Set ROUTEROS_USER in .env}
+      ROUTEROS_PASSWORD: ${ROUTEROS_PASSWORD:?Set ROUTEROS_PASSWORD in .env}
+      NETWORK_ADMIN_PASSWORD: ${NETWORK_ADMIN_PASSWORD:?Set NETWORK_ADMIN_PASSWORD in .env}
+      NETWORK_WAN: ${NETWORK_WAN:-}
+      NETWORK_PING_TARGET: ${NETWORK_PING_TARGET:-223.5.5.5}
+      # Private CA: also add a read-only certificate mount below.
+      ROUTEROS_CA_FILE: ${ROUTEROS_CA_FILE:-}
+      ROUTEROS_SERVER_NAME: ${ROUTEROS_SERVER_NAME:-}
+    volumes:
+      - network-data:/data
+      # - ./router-ca.crt:/certs/router-ca.crt:ro
+
+volumes:
+  network-data:
