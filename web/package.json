@@ -1,0 +1,15 @@
+{
+  "name": "network-ui",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "check": "tsc --noEmit",
+    "build": "node build.mjs",
+    "test": "node build.mjs --test"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.2",
+    "typescript": "^7.0.2"
+  }
+}

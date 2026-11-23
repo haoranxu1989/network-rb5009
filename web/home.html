@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>网络总览 · Network</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="/overview.css">
+</head>
+<body data-gateway-image="/overview/rb5009.webp" data-poe-gateway-image="/overview/rb5009upr.webp">
+  <a id="skip-content" class="skip" href="#overview">跳至主要内容</a>
+  <header class="topbar">
+    <span class="appname"><span data-icon="network"></span>Network</span>
+    <div class="toptools">
+      <span class="history-feedback" id="history-feedback" role="status"></span>
+      <div class="maintenance-task" id="maintenance-task" hidden>
+        <button type="button" id="task-open" data-open="gateway" aria-haspopup="dialog" aria-controls="details">
+          <span class="task-symbol" id="task-symbol" aria-hidden="true"></span>
+          <span class="task-body"><span class="task-caption"><span id="task-stage" role="status"></span><b id="task-percent" hidden></b></span>
+            <progress id="task-progress" max="100" aria-label="RouterOS 下载进度" hidden></progress>
+          </span>
+        </button>
+        <button type="button" id="task-reboot" aria-controls="gw-action-dialog" aria-haspopup="dialog" hidden>重启安装</button>
+        <button type="button" id="task-dismiss" aria-label="收起操作结果" title="收起操作结果" hidden><span data-icon="close"></span></button>
+      </div>
+      <a class="bell icon-button" href="#logs" aria-label="RouterOS 日志" title="RouterOS 日志"><span data-icon="bell"></span></a>
+      <button type="button" class="icon-button" id="history-open" aria-label="清除当前网关的面板历史数据" title="清除当前网关的面板历史数据" aria-haspopup="dialog" aria-controls="history-dialog" disabled><span data-icon="trash"></span></button>
+    </div>
+  </header>
+  <aside class="rail">
+    <nav aria-label="面板导航">
+      <a class="rail-item active" href="#overview" aria-label="网络总览" aria-current="page" title="网络总览"><span data-icon="overview"></span></a>
+      <a class="rail-item" href="#logs" aria-label="RouterOS 日志" title="RouterOS 日志"><span data-icon="logs"></span></a>
+    </nav>
+  </aside>
+  <main id="overview" tabindex="-1" aria-labelledby="overview-title">
+    <h1 class="sr-only" id="overview-title">网络总览</h1>
+    <div class="dashboard-grid">
+      <section id="gateway" class="card gateway" aria-labelledby="gateway-title">
+        <header class="card-head">
+          <h2 id="gateway-title"><span data-icon="router"></span>网关</h2>
+          <div class="gateway-head-actions">
+            <button type="button" class="icon-button gateway-action" id="gateway-reboot" aria-label="重启网关" title="重启网关" aria-haspopup="dialog" aria-controls="gw-action-dialog" disabled><span data-icon="restart"></span></button>
+            <span class="dot-label" id="gateway-status">等待数据</span>
+          </div>
+        </header>
+        <div class="gateway-summary">
+          <div class="device-stage"><img id="product-photo" alt="MikroTik RB5009 网关" hidden><span id="generic-router" data-icon="router"></span></div>
+          <div class="device-heading"><span class="maker" id="device-maker">MikroTik</span><h3 id="model">等待设备信息</h3>
+            <dl class="specs">
+              <div><dt class="sr-only">系统版本</dt><dd class="version-line">
+                <button type="button" id="version" data-open="gateway" title="查看版本详情" aria-haspopup="dialog" aria-controls="details">—</button>
+                <button type="button" class="icon-button gateway-action" id="gateway-update" aria-label="查看可用更新" title="查看可用更新" aria-haspopup="dialog" hidden><span data-icon="upgrade"></span></button>
+              </dd></div>
+              <div><dt>已运行</dt><dd id="uptime">—</dd></div>
+            </dl>
+          </div>
+        </div>
+        <div class="gauges"><div><span>CPU <b id="cpu-value">—</b></span><progress id="cpu" max="100" aria-label="CPU 使用率"></progress></div><div><span>内存 <b id="memory-value">—</b></span><progress id="memory" max="100" aria-label="内存使用率"></progress></div></div>
+      </section>
+      <section id="quality" class="card quality" aria-labelledby="quality-title">
+        <div class="card-body">
+          <header class="card-head"><h2 id="quality-title"><span data-icon="globe"></span>互联网质量</h2><span id="health-text" class="health-status">等待采样</span></header>
+          <div class="quality-metrics">
+            <div><span class="metric-label">延迟 <small id="quality-target" hidden></small></span><div class="quality-number"><strong id="latency">—</strong><span>ms</span></div></div>
+            <div><span class="metric-label">丢包率</span><div class="quality-number"><strong id="loss">—</strong><span>%</span></div></div>
+          </div>
+          <div class="quality-connectivity"><div class="health-caption"><span>近 24 小时连通性</span><span>现在</span></div><div id="health" class="health-bars" role="img" aria-label="近 24 小时连通性"></div></div>
+        </div>
+        <div class="card-footer quality-address"><span>WAN 地址</span><b id="wan-ip">—</b></div>
+      </section>
+      <section id="traffic" class="card traffic" tabindex="-1" aria-labelledby="traffic-title">
+        <div class="card-body">
+          <header class="card-head traffic-head">
+            <h2 id="traffic-title"><span data-icon="activity"></span>互联网流量</h2>
+            <dl class="traffic-metrics" aria-label="当前传输速率">
+              <div><dt><span data-icon="arrow-down" class="ink-blue"></span>下载速率</dt><dd><strong id="down">—</strong> Mbps</dd></div>
+              <div><dt><span data-icon="arrow-up" class="ink-violet"></span>上传速率</dt><dd><strong id="up">—</strong> Mbps</dd></div>
+            </dl>
+            <div class="segmented" role="group" aria-label="流量时间范围"><button data-range="1h" aria-pressed="true">1 小时</button><button data-range="24h" aria-pressed="false">24 小时</button><button data-range="7d" aria-pressed="false">7 天</button></div>
+          </header>
+          <div id="chart" class="chart" tabindex="0" role="group" aria-label="流量图，使用左右方向键查看采样点" aria-describedby="chart-hint">
+            <div class="y-ticks" id="y-ticks"></div><div class="plot"><svg id="plot-svg" width="100%" height="100%" viewBox="0 0 900 160" preserveAspectRatio="none" aria-hidden="true"></svg><div id="crosshair" class="crosshair" hidden></div><div id="chart-tip" class="chart-tip" hidden></div><span id="chart-empty" class="empty-chart" hidden>暂无流量样本</span></div>
+            <div class="x-ticks" id="x-ticks"></div><span id="chart-hint" class="sr-only">鼠标悬停、触摸或使用方向键查看时间、下载和上传速率。</span>
+          </div>
+        </div>
+        <div class="card-footer traffic-footer">
+          <span>累计下载 <b id="down-total">—</b></span><span>累计上传 <b id="up-total">—</b></span>
+          <span class="interface-label"><span data-icon="port"></span><span id="interface">WAN</span></span>
+          <span class="sample-time" id="sample-time"></span>
+        </div>
+      </section>
+      <section class="card ports" id="ports" tabindex="-1" aria-labelledby="ports-title">
+        <header class="card-head">
+          <div class="port-heading"><h2 id="ports-title"><span data-icon="port"></span>物理端口</h2><span id="ports-count" class="port-count"></span></div>
+          <div class="port-actions"><a id="port-demo-link" href="?demo=poe#ports" hidden>供电示例</a><button type="button" class="text-link detail-toggle" id="port-table-toggle" aria-expanded="false" aria-controls="port-table" hidden><span id="port-toggle-label">展开明细</span><span data-icon="chevron-down"></span></button></div>
+        </header>
+        <div id="port-map" class="port-map" role="group" aria-label="物理端口图"></div>
+        <div id="port-key" class="port-key" hidden>
+          <div id="port-legend" class="port-legend" aria-label="链路速率与供电标记"></div>
+          <div id="port-power-total" class="poe-summary" hidden></div>
+        </div>
+        <div id="port-table" class="table-wrap port-table" hidden><table aria-label="端口明细"><thead><tr><th>接口</th><th class="port-note">接口备注</th><th>状态</th><th>协商速率</th><th id="port-poe-col" hidden>PoE</th><th class="numeric" title="网关接口接收（RX）">接收速率</th><th class="numeric" title="网关接口发送（TX）">发送速率</th></tr></thead><tbody id="port-rows"></tbody></table></div>
+      </section>
+      <section class="card clients" id="clients" aria-labelledby="clients-title">
+        <header class="card-head client-head">
+          <h2 id="clients-title"><span data-icon="clients"></span>客户端 <span class="count" id="client-count">—</span></h2>
+          <label id="client-filter" class="search-box" hidden><span data-icon="search"></span><input id="client-search" type="search" aria-label="搜索客户端" placeholder="搜索设备、IP 或 MAC"></label>
+          <button type="button" id="clients-toggle" class="text-link detail-toggle" aria-expanded="false" aria-controls="client-rows client-filter" hidden><span id="clients-toggle-label">展开明细</span><span data-icon="chevron-down"></span></button>
+        </header>
+        <div class="table-wrap"><table class="client-table" aria-label="客户端连接与流量"><thead><tr>
+          <th>设备名称</th><th class="client-ip">IP 地址</th><th class="session-col">在线记录</th><th class="wave-col">近 15 分钟速率</th>
+          <th class="numeric client-rate"><span data-icon="arrow-down" class="ink-blue"></span>下载速率</th><th class="numeric client-rate"><span data-icon="arrow-up" class="ink-violet"></span>上传速率</th>
+        </tr></thead><tbody id="client-rows"></tbody></table></div>
+      </section>
+    </div>
+  </main>
+  <main id="logs" tabindex="-1" aria-labelledby="logs-title" hidden>
+    <a class="logs-back" href="#overview"><span data-icon="back"></span>网络总览</a>
+    <div class="card log-card">
+      <header class="card-head">
+        <h1 id="logs-title"><span data-icon="logs"></span>RouterOS 日志 <span class="count log-count" id="log-count" hidden></span></h1>
+        <span class="subtle" id="log-demo" hidden>演示日志</span>
+      </header>
+      <table class="log-table" aria-labelledby="logs-title">
+        <thead><tr id="log-columns"></tr></thead>
+        <tbody id="log-rows"></tbody>
+      </table>
+      <p class="empty" id="log-empty" role="status" hidden></p>
+    </div>
+  </main>
+  <template id="client-detail-template">
+    <div id="client-identity"></div>
+    <section class="client-activity"><h3>近 1 小时速率</h3>
+      <div class="client-rate-card">
+        <div class="port-traffic-pair" id="client-detail-rates"></div>
+        <div class="client-rate-chart" id="client-rate-chart" tabindex="0" role="group" aria-label="客户端近 1 小时速率图，使用左右方向键查看采样点">
+          <span class="axis-unit" aria-hidden="true"></span>
+          <div class="y-ticks" aria-hidden="true"></div>
+          <div class="plot">
+            <svg viewBox="0 0 900 160" preserveAspectRatio="none" aria-hidden="true"></svg>
+            <div class="crosshair" aria-hidden="true" hidden><i class="wave-down"></i><i class="wave-up"></i></div>
+            <div class="chart-tip" role="tooltip" hidden></div>
+            <span class="empty-chart" hidden>近 1 小时暂无速率采样</span>
+          </div>
+          <div class="client-time-axis" aria-hidden="true"></div>
+        </div>
+      </div>
+    </section>
+  </template>
+  <dialog id="details" class="drawer" aria-labelledby="drawer-title">
+    <div class="drawer-head"><h2 id="drawer-title">详情</h2><button id="drawer-close" class="icon-button" aria-label="关闭"><span data-icon="close"></span></button></div>
+    <div class="drawer-content" id="drawer-content"></div>
+    <div class="drawer-content gateway-panel" id="gateway-panel" hidden>
+      <div class="detail-device"><span class="device-icon" data-icon="router"></span><div><h3 id="gw-name"></h3><span class="subtle" id="gw-model"></span></div></div>
+      <p class="gw-demo" id="gw-demo" hidden>演示模式 · 操作仅在此预览中模拟</p>
+      <div class="gw-version-row"><div><h3>RouterOS</h3><div class="gw-versions" id="gw-os-version"></div><small id="gw-os-status"></small></div><button type="button" class="gw-btn" data-gw-action="upgrade" hidden>下载更新</button></div>
+      <div class="gw-version-row" id="gw-boot-row" hidden><div><h3>RouterBOOT 固件</h3><div class="gw-versions" id="gw-boot-version"></div><small id="gw-boot-status"></small></div><button type="button" class="gw-btn" data-gw-action="fwupgrade" hidden>升级固件</button></div>
+      <div class="gw-version-row"><div><h3>网关运行时间</h3><span class="subtle" id="gw-uptime"></span></div><button type="button" class="gw-btn gw-reboot" data-gw-action="reboot" hidden><span data-icon="restart"></span>重启网关</button></div>
+      <p class="subtle gw-permission" id="gw-permission" hidden></p>
+      <p class="gw-feedback" id="gw-feedback" role="status" hidden></p>
+    </div>
+  </dialog>
+  <dialog class="action-dialog" id="gw-action-dialog" aria-labelledby="gw-confirm-title" aria-describedby="gw-impact">
+    <form id="gw-confirm">
+      <div class="action-heading"><span class="action-symbol" id="gw-symbol" aria-hidden="true"></span>
+        <div><h2 id="gw-confirm-title"></h2><p id="gw-target"></p></div>
+      </div>
+      <div class="action-versions" id="gw-version-pair" hidden><span id="gw-from"></span><span data-icon="arrow-right"></span><strong id="gw-to"></strong></div>
+      <p class="action-impact" id="gw-impact"></p>
+      <div class="action-name" id="gw-name-field" hidden>
+        <label for="gw-typed">输入「<strong>确认</strong>」继续</label>
+        <input id="gw-typed" type="text" autocomplete="off" spellcheck="false" autocapitalize="off">
+      </div>
+      <p class="action-note" id="gw-simulation" hidden>演示操作，仅在此预览中模拟。</p>
+      <p class="action-error" id="gw-review-error" role="status" hidden></p>
+      <div class="action-buttons"><button type="button" id="gw-cancel" autofocus>取消</button><button type="submit" id="gw-submit" disabled></button></div>
+    </form>
+  </dialog>
+  <dialog class="action-dialog" id="history-dialog" aria-labelledby="history-title" aria-describedby="history-impact">
+    <form id="history-form">
+      <div class="action-heading"><span class="action-symbol" data-icon="trash"></span>
+        <div><h2 id="history-title">清除历史数据？</h2><p id="history-target"></p></div>
+      </div>
+      <p class="action-impact" id="history-impact">以下记录将永久删除。面板会从下一次采样开始重新记录。</p>
+      <dl class="history-scope">
+        <div><dt>流量统计</dt><dd>物理端口收发累计和 WAN 流量曲线</dd></div>
+        <div><dt>互联网质量</dt><dd>延迟、丢包和连通性记录</dd></div>
+        <div><dt>客户端历史</dt><dd>最近在线、连接时长和速率采样</dd></div>
+      </dl>
+      <div class="action-name"><label for="history-typed">输入「<strong>确认</strong>」继续</label>
+        <input id="history-typed" type="text" autocomplete="off" spellcheck="false" autocapitalize="off">
+      </div>
+      <p class="action-note" id="history-note" role="status"></p>
+      <div class="action-buttons"><button type="button" id="history-cancel" autofocus>取消</button><button type="submit" id="history-submit" disabled>清除历史数据</button></div>
+    </form>
+  </dialog>
+  <noscript>查看网络面板需要启用 JavaScript。</noscript>
+  <script src="/overview.js"></script>
+</body>
+</html>
